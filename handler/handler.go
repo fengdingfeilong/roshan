@@ -2,8 +2,9 @@ package handler
 
 import (
 	"net"
-	"roshan/message"
 	"sync"
+
+	"github.com/fengdingfeilong/roshan/message"
 )
 
 //Handler process package

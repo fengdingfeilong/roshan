@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"roshan/handler"
-	"roshan/message"
 	"strconv"
 	"time"
+
+	"github.com/fengdingfeilong/roshan/handler"
+	"github.com/fengdingfeilong/roshan/message"
 )
 
 //tcpSCBase tcpserver and tcpclient base
