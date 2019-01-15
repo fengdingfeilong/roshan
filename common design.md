@@ -37,19 +37,19 @@ payload: the data you want to transfer
 
 suggest command messages:
 
-| command type           | description                                                  |
-| :--------------------- | ------------------------------------------------------------ |
-| ConnectMessage         | contains the information of client.                          |
-| AcceptMessage          | response of ConnectMessage. can contains the information of server. |
-| RejectMessage          | response of ConnectMessage. can contains the reason of reject. |
-| DisconnectMessage      | close connection in normal cases. mainly send by client side. |
-| PingMessage            | after server accept the client, test the business connection.data is "ping" and response is "pong". |
-| TransferMessage        | the information of the transfer. should contains a guid/uuid(128bit) identify of the transfer process. |
-| TransferCancelMessage  | cancel the transfer process.                                 |
-| TransferSuccessMessage | after all the file data received, send this message as a ACK to let other know. |
-| ErrorMessage           | information of errors. 0 means received data.                |
-| CommandMessage         | can send some simple command to server side. may cause the security issue, if necessary should implement this  carefully. |
-|                        |                                                              |
+| command type            | description                                                  |
+| :---------------------- | ------------------------------------------------------------ |
+| ConnectMessage          | contains the information of client.                          |
+| AcceptMessage           | response of ConnectMessage. can contains the information of server. |
+| RejectMessage           | response of ConnectMessage. can contains the reason of reject. |
+| DisconnectMessage       | close connection in normal cases. mainly send by client side. |
+| PingMessage             | after server accept the client, test the business connection.data is "ping" and response is "pong". |
+| TransferMessage         | the information of the transfer. should contains a guid/uuid(128bit) identify of the transfer process. |
+| TransferCancelMessage   | cancel the transfer process.                                 |
+| TransferCompleteMessage | after all the file data received, send this message as a ACK to let other know. |
+| ErrorMessage            | information of errors. 0 means received data.                |
+| CommandMessage          | can send some simple command to server side. may cause the security issue, if necessary should implement this  carefully. |
+|                         |                                                              |
 
 
 

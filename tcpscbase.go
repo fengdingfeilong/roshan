@@ -21,6 +21,8 @@ type tcpSCBase struct {
 	HBSendInterval int
 	//HBTimeout timeout for receiving heartbeat(unit:second)
 	HBTimeout int
+	//socket disconnect
+	SocketDisconnect func(conn net.Conn)
 }
 
 //AddHandler add handler for message

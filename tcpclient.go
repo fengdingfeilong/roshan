@@ -29,11 +29,11 @@ func NewClient() *Client {
 }
 
 //Connect connect to server
-func (client *Client) Connect(ip string, port int) {
+func (client *Client) Connect(ip string, port int) bool {
 	conn, err := net.Dial("tcp", ip+":"+strconv.Itoa(port))
 	if err != nil {
 		loginfo(err.Error(), err)
-		return
+		return false
 	}
 	cc := newConnContext(conn)
 	cc.socketErrOccured = client.handleSocErr
@@ -42,6 +42,7 @@ func (client *Client) Connect(ip string, port int) {
 		client.SocketConnected(cc)
 	}
 	go client.handleConn(cc)
+	return true
 }
 
 func (client *Client) handleSocErr(cc *connContext, err error) {
