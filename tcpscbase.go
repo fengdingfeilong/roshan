@@ -119,6 +119,9 @@ func (sc *tcpSCBase) closeSocket(cc *connContext) {
 		b, _ := h.(*handler.Base)
 		b.Dispose()
 	})
+	if sc.SocketDisconnect != nil {
+		sc.SocketDisconnect(cc)
+	}
 }
 
 //Transmit send message to handler
