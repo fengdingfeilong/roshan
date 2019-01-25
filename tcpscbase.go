@@ -6,6 +6,7 @@ import (
 	"io"
 	"net"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/fengdingfeilong/roshan/handler"
@@ -23,6 +24,14 @@ type tcpSCBase struct {
 	HBTimeout int
 	//socket disconnect
 	SocketDisconnect func(conn net.Conn)
+	//security key(use aes, ctr mode)
+	key    string
+	cmutex sync.Mutex
+}
+
+//set security key(use aes, ctr mode)
+func (sc *tcpSCBase) SetSK(key string) {
+	sc.key = key
 }
 
 //AddHandler add handler for message
@@ -32,7 +41,7 @@ func (sc *tcpSCBase) AddHandler(msgType message.CmdType, handler handler.Handler
 
 func (sc *tcpSCBase) handleConn(cc *connContext) {
 	sc.handlerManager.Foreach(func(t message.CmdType, h handler.Handler) {
-		h.GetBase().SetConn(cc.conn)
+		h.GetBase().SetConn(cc)
 	})
 	go sc.sendHB(cc)
 	go sc.checkConnection(cc)
@@ -40,12 +49,15 @@ func (sc *tcpSCBase) handleConn(cc *connContext) {
 		r, err := message.ParsePacket(cc, message.ParseCallback(sc.handlePacket))
 		if !r {
 			if err != io.EOF {
-				loginfo(fmt.Sprintf("parse error: %s", err.Error()), err)
+				loginfo(fmt.Sprintf("tcpscbase handle conn parse error: %s", err.Error()), err)
+				//fmt.Println("parse error:", err.Error())
+				sc.closeSocket(cc)
 			}
 			return
 		}
 	}
 }
+
 func (sc *tcpSCBase) handlePacket(conn net.Conn, pac *message.Packet) {
 	cc, ok := conn.(*connContext)
 	if !ok {
@@ -114,10 +126,17 @@ func (sc *tcpSCBase) checkConnection(cc *connContext) {
 }
 
 func (sc *tcpSCBase) closeSocket(cc *connContext) {
+	sc.cmutex.Lock()
+	defer sc.cmutex.Unlock()
+	if cc.isClosed {
+		return
+	}
 	cc.Close()
 	sc.handlerManager.Foreach(func(t message.CmdType, h handler.Handler) {
-		b, _ := h.(*handler.Base)
-		b.Dispose()
+		b := h.GetBase()
+		if b != nil {
+			b.Dispose()
+		}
 	})
 	if sc.SocketDisconnect != nil {
 		sc.SocketDisconnect(cc)

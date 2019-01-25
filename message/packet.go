@@ -3,8 +3,9 @@ package message
 import (
 	"encoding/binary"
 	"encoding/json"
-	"io"
 	"net"
+
+	"github.com/fengdingfeilong/roshan/errors"
 )
 
 //Packet is the tcp packet data format
@@ -33,41 +34,31 @@ const (
 	Data
 )
 
-func read(reader io.Reader, buf []byte) (bool, error) {
-	l := len(buf)
-	var t int
-	for {
-		r, err := reader.Read(buf[t:])
-		if err != nil {
-			return false, err
-		}
-		t += r
-		if t >= l {
-			return true, nil
-		}
-	}
-}
-
 type ParseCallback func(net.Conn, *Packet)
 
 func ParsePacket(cc net.Conn, callback ParseCallback) (bool, error) {
 	head := [HeaderLen]byte{}
-	b, err := read(cc, head[:2])
-	if !b && err != nil {
+	_, err := cc.Read(head[:2])
+	if err != nil {
 		return false, err
 	}
 	var pac Packet
 	pac.Version = head[0]
 	pac.Type = PacketType(head[1])
+	//check decrypt data
+	if pac.Version != PacketVersion ||
+		(pac.Type != HeartBeat && pac.Type != Command && pac.Type != Data) {
+		return false, errors.NewPswInvalidateErr()
+	}
 	if pac.Type != HeartBeat {
-		b, err = read(cc, head[2:])
-		if !b && err != nil {
+		_, err = cc.Read(head[2:])
+		if err != nil {
 			return false, err
 		}
 		pac.Length = int32(binary.BigEndian.Uint32(head[2:]))
 		pac.Payload = make([]byte, pac.Length)
-		b, err = read(cc, pac.Payload)
-		if !b && err != nil {
+		_, err = cc.Read(pac.Payload)
+		if err != nil {
 			return false, err
 		}
 	}

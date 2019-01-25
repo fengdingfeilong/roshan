@@ -92,6 +92,7 @@ func (server *Server) startAccept() {
 		}
 		cc := newConnContext(conn)
 		cc.socketErrOccured = server.handleSocErr
+		cc.SetSK(server.key)
 		//server.connmanager.Add(context)
 		if server.SocketAccepted != nil {
 			server.SocketAccepted(cc)

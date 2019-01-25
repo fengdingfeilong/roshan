@@ -38,6 +38,7 @@ func (client *Client) Connect(ip string, port int) bool {
 	cc := newConnContext(conn)
 	cc.socketErrOccured = client.handleSocErr
 	client.workConn = cc
+	cc.SetSK(client.key)
 	if client.SocketConnected != nil {
 		client.SocketConnected(cc)
 	}

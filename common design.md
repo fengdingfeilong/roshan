@@ -69,10 +69,10 @@ when implement the file transfer, can split many litter packets.
 target->source:connect
 source->target: accept
 target->source:getfilelist
-source->target:filelist(30-50items in once transfer.\ntarget need to store this list in local)
+source->target:filelist(30-50items in once transfer.)
 target->source:getfile(with uuid)
 source->target:filedata(with uuid,target check hash)
-target->source:transfersuccess(with uuid,source may need the file state to do something)
+target->source:transfercomplete
 target->source:disconnect(then target close connection)
 ```
 
