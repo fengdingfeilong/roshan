@@ -85,7 +85,7 @@ func (manager *Manager) Get(msgType message.CmdType) Handler {
 	return manager.handlers[msgType]
 }
 
-//Foreach traveral handlers
+//Foreach traversal handlers
 func (manager *Manager) Foreach(f func(message.CmdType, Handler)) {
 	manager.Lock()
 	defer manager.Unlock()
