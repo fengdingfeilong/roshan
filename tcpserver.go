@@ -6,8 +6,8 @@ import (
 	"syscall"
 	"time"
 
-	"roshan/handler"
-	"roshan/roshantool"
+	"github.com/fengdingfeilong/roshan/handler"
+	"github.com/fengdingfeilong/roshan/roshantool"
 )
 
 func loginfo(s string, err error) {

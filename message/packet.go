@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net"
 
-	"roshan/errors"
+	"github.com/fengdingfeilong/roshan/errors"
 )
 
 //Packet is the tcp packet data format

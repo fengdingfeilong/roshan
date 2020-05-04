@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"roshan/handler"
-	"roshan/message"
+	"github.com/fengdingfeilong/roshan/handler"
+	"github.com/fengdingfeilong/roshan/message"
 )
 
 //tcpSCBase tcpserver and tcpclient base
