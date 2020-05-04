@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"roshan/errors"
 	"roshan/handler"
 	"roshan/message"
 )
@@ -25,6 +24,8 @@ type tcpSCBase struct {
 	HBTimeout int
 	//socket disconnect
 	SocketDisconnect func(conn net.Conn)
+	//handle ErrorOccurred error occurred
+	ErrorOccurred func(conn net.Conn, err error)
 	//security key(use aes, ctr mode)
 	key    string
 	cmutex sync.Mutex
@@ -51,10 +52,13 @@ func (sc *tcpSCBase) handleConn(cc *connContext) {
 		if !r {
 			if err != io.EOF {
 				loginfo(fmt.Sprintf("tcpscbase handle conn parse error: %s", err.Error()), err)
-				sc.closeSocket(cc)
-				if err == errors.PasswordErr {
-					fmt.Println(err.Error())
+				if sc.ErrorOccurred != nil {
+					cc, ok := conn.(*connContext)
+					if ok {
+						sc.ErrorOccurred(cc, err)
+					}
 				}
+				// sc.closeSocket(cc)
 			}
 			return
 		}
