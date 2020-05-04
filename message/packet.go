@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net"
 
-	"github.com/fengdingfeilong/roshan/errors"
+	"roshan/errors"
 )
 
 //Packet is the tcp packet data format
@@ -48,7 +48,7 @@ func ParsePacket(cc net.Conn, callback ParseCallback) (bool, error) {
 	//check decrypt data
 	if pac.Version != PacketVersion ||
 		(pac.Type != HeartBeat && pac.Type != Command && pac.Type != Data) {
-		return false, errors.NewPswInvalidateErr()
+		return false, errors.PasswordErr
 	}
 	if pac.Type != HeartBeat {
 		_, err = cc.Read(head[2:])

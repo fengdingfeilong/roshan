@@ -4,7 +4,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/fengdingfeilong/roshan/message"
+	"roshan/message"
 )
 
 //Handler process package

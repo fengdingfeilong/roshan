@@ -9,8 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fengdingfeilong/roshan/handler"
-	"github.com/fengdingfeilong/roshan/message"
+	"roshan/errors"
+	"roshan/handler"
+	"roshan/message"
 )
 
 //tcpSCBase tcpserver and tcpclient base
@@ -50,8 +51,10 @@ func (sc *tcpSCBase) handleConn(cc *connContext) {
 		if !r {
 			if err != io.EOF {
 				loginfo(fmt.Sprintf("tcpscbase handle conn parse error: %s", err.Error()), err)
-				//fmt.Println("parse error:", err.Error())
 				sc.closeSocket(cc)
+				if err == errors.PasswordErr {
+					fmt.Println(err.Error())
+				}
 			}
 			return
 		}

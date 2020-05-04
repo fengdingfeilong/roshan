@@ -5,7 +5,7 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/fengdingfeilong/roshan/handler"
+	"roshan/handler"
 )
 
 //Client tcpserver client
