@@ -1,3 +1,3 @@
-module github.com/fengdingfeilong/roshan
+module roshan
 
 go 1.14
