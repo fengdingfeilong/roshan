@@ -53,10 +53,7 @@ func (sc *tcpSCBase) handleConn(cc *connContext) {
 			if err != io.EOF {
 				loginfo(fmt.Sprintf("tcpscbase handle conn parse error: %s", err.Error()), err)
 				if sc.ErrorOccurred != nil {
-					cc, ok := conn.(*connContext)
-					if ok {
-						sc.ErrorOccurred(cc, err)
-					}
+					sc.ErrorOccurred(cc, err)
 				}
 				// sc.closeSocket(cc)
 			}
